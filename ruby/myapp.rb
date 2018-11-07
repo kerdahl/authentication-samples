@@ -14,7 +14,7 @@ require 'oauth2'
 require 'securerandom'
 require 'json'
 
-# Define our configurations.  This is only done for illustrative purposes. 
+# Define our configurations.  This is only done for illustrative purposes.
 # It is STRONGLY recommended that you do not store application secrets on your file system or in your source code.
 configure do
   enable :sessions
@@ -23,12 +23,12 @@ configure do
   set :client_id,      '<YOUR CLIENT ID HERE>'     # The client ID assigned when you created your application
   set :client_secret,  '<YOUR CLIENT SECRET HERE>' # The client secret assigned when you created your application
   set :redirect_uri,   '<YOUR REDIRECT URL HERE>'  # You can run locally with - http://localhost:4567/auth/twitch/callback
-  set :scope,          'user_read'                 # The scopes you would like to request 
+  set :scope,          '<YOUR OAUTH SCOPE HERE>'   # The scopes you would like to request
 end
 
 def client
-  OAuth2::Client.new(settings.client_id, settings.client_secret, 
-    :site => 'https://api.twitch.tv', :authorize_url => '/kraken/oauth2/authorize', :token_url => '/kraken/oauth2/token')
+  OAuth2::Client.new(settings.client_id, settings.client_secret,
+    :site => 'https://id.twitch.tv', :authorize_url => '/oauth2/authorize', :token_url => '/oauth2/token')
 end
 
 # Set route to start OAuth link, this is where you define scopes to request
@@ -52,14 +52,12 @@ end
 # If user has an authenticated session, display it, otherwise display link to authenticate
 get '/' do
   if session[:access_token]
-    access_token = OAuth2::AccessToken.new(client, session[:access_token], :header_format => 'OAuth %s')
-    puts access_token
-    puts access_token[:token]
-    response = access_token.get("/kraken/user", :headers => {
-      'Client-ID' => settings.client_id, 
-      'Accept' => 'application/vnd.twitchtv.v5+json'})
-    profile = JSON.parse(response.body)
-    puts profile
+    conn = Faraday.new('https://api.twitch.tv')
+    response = conn.get do |req|
+      req.url '/helix/users'
+      req.headers['Authorization'] = 'Bearer ' + session[:access_token]
+    end
+    profile = JSON.parse(response.body)['data'][0]
     puts profile["display_name"]
     erb :index_authenticated, :locals => {'profile' => profile, 'access_token' => access_token}
   else

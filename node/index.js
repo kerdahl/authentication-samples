@@ -33,12 +33,12 @@ app.use(passport.session());
 // Override passport profile function to get user profile from Twitch API
 OAuth2Strategy.prototype.userProfile = function(accessToken, done) {
   var options = {
-    url: 'https://api.twitch.tv/kraken/user',
+    url: 'https://api.twitch.tv/helix/users',
     method: 'GET',
     headers: {
       'Client-ID': TWITCH_CLIENT_ID,
       'Accept': 'application/vnd.twitchtv.v5+json',
-      'Authorization': 'OAuth ' + accessToken
+      'Authorization': 'Bearer ' + accessToken
     }
   };
 
@@ -60,8 +60,8 @@ passport.deserializeUser(function(user, done) {
 });
 
 passport.use('twitch', new OAuth2Strategy({
-    authorizationURL: 'https://api.twitch.tv/kraken/oauth2/authorize',
-    tokenURL: 'https://api.twitch.tv/kraken/oauth2/token',
+    authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
+    tokenURL: 'https://id.twitch.tv/oauth2/token',
     clientID: TWITCH_CLIENT_ID,
     clientSecret: TWITCH_SECRET,
     callbackURL: CALLBACK_URL,
