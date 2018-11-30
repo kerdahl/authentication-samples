@@ -11,7 +11,7 @@ $ npm install
 ## Usage
 Before running this sample, you will need to set four configuration fields at the top of index.js:
 
-1. TWITCH_CLIENT_ID - This is the Client ID of your registered application.  You can register an application at [https://www.twitch.tv/settings/connections]
+1. TWITCH_CLIENT_ID - This is the Client ID of your registered application.  You can register a new application at [https://dev.twitch.tv/dashboard/apps]
 2. TWITCH_CLIENT_SECRET - This is the secret generated for you when you register your application, do not share this. In a production environment, it is STRONGLY recommended that you do not store application secrets on your file system or in your source code.
 3. SESSION_SECRET -  This is the secret Express session middleware uses to sign the session ID cookie.
 4. CALLBACK_URL - This is the callback URL you supply when you register your application.  To run this sample locally use [http://localhost:3000/auth/twitch/callback]
