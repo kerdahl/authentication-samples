@@ -60,21 +60,21 @@ class TwitchProvider extends AbstractProvider
                 'responseResourceOwnerId',
                 'scopes',
         ];
-    }    
+    }
 
     public function getBaseAuthorizationUrl()
     {
-        return 'https://api.twitch.tv/kraken/oauth2/authorize';
+        return 'https://id.twitch.tv/oauth2/authorize';
     }
 
     public function getBaseAccessTokenUrl(array $params)
     {
-        return 'https://api.twitch.tv/kraken/oauth2/token';
+        return 'https://id.twitch.tv/oauth2/token';
     }
 
     public function getResourceOwnerDetailsUrl(AccessToken $token)
     {
-        return 'https://api.twitch.tv/kraken/user';
+        return 'https://api.twitch.tv/helix/users';
     }
 
     public function getDefaultScopes()
@@ -85,7 +85,7 @@ class TwitchProvider extends AbstractProvider
     protected function getScopeSeparator()
     {
         return ' ';
-    }    
+    }
 
     protected function checkResponse(ResponseInterface $response, $data)
     {
@@ -104,10 +104,10 @@ class TwitchProvider extends AbstractProvider
     protected function getDefaultHeaders()
     {
         return ['Client-ID' => $this->clientId, 'Accept' => 'application/vnd.twitchtv.v5+json'];
-    }    
+    }
 
     protected function getAuthorizationHeaders($token = NULL)
     {
-        return ['Authorization' => 'OAuth '.$token];
+        return ['Authorization' => 'Bearer '.$token];
     }
 }

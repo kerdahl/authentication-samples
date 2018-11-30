@@ -17,7 +17,7 @@ $provider = new TwitchProvider([
     'clientId'                => '<YOUR CLIENT ID HERE>',     // The client ID assigned when you created your application
     'clientSecret'            => '<YOUR CLIENT SECRET HERE>', // The client secret assigned when you created your application
     'redirectUri'             => '<YOUR REDIRECT URL HERE>',  // Your redirect URL you specified when you created your application
-    'scopes'                  => ['user_read']                // The scopes you would like to request 
+    'scopes'                  => ['<YOUR OAUTH SCOPE HERE>']  // The scopes you would like to request
 ]);
 
 // If we don't have an authorization code then get one
@@ -37,7 +37,7 @@ if (!isset($_GET['code'])) {
     if (isset($_SESSION['oauth2state'])) {
         unset($_SESSION['oauth2state']);
     }
-    
+
     exit('Invalid state');
 
 } else {
@@ -57,7 +57,7 @@ if (!isset($_GET['code'])) {
         echo '<tr><th>Access Token</th><td>' . htmlspecialchars($accessToken->getToken()) . '</td></tr>';
         echo '<tr><th>Refresh Token</th><td>' . htmlspecialchars($accessToken->getRefreshToken()) . '</td></tr>';
         echo '<tr><th>Username</th><td>' . htmlspecialchars($user['display_name']) . '</td></tr>';
-        echo '<tr><th>Bio</th><td>' . htmlspecialchars($user['bio']) . '</td></tr>';        
+        echo '<tr><th>Bio</th><td>' . htmlspecialchars($user['bio']) . '</td></tr>';
         echo '<tr><th>Image</th><td><img src="' . htmlspecialchars($user['logo']) . '"></td></tr>';
         echo '</table></html>';
 

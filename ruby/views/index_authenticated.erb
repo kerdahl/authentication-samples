@@ -14,10 +14,10 @@ or in the "license" file accompanying this file. This file is distributed on an 
     </head>
     <body>
         <table>
-            <tr><th>Access Token</th><td><%= access_token.token %></td></tr>
+            <tr><th>Access Token</th><td><%= session[:access_token] %></td></tr>
             <tr><th>Display Name</th><td><%= profile["display_name"] %></td></tr>
-            <tr><th>Bio</th><td><%= profile["bio"] %></td></tr>
-            <tr><th>Image</th><td><img src="<%= profile["logo"] %>"></td></tr>
+            <tr><th>Bio</th><td><%= profile["description"] %></td></tr>
+            <tr><th>Image</th><td><img src="<%= profile["profile_image_url"] %>"></td></tr>
         </table>
     </body>
 </html>
