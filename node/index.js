@@ -10,6 +10,7 @@ or in the "license" file accompanying this file. This file is distributed on an 
 */
 
 require('dotenv').config();
+require('https').globalAgent.options.rejectUnauthorized = false;
 
 // Define our dependencies
 const express = require('express');
@@ -18,12 +19,16 @@ const passport = require('passport');
 const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 const request = require('request');
 const handlebars = require('handlebars');
+const TwitchJS = require('twitch-js').default;
+const fetch = require('node-fetch');
 
 // Define our constants, you will change these with your own
 const TWITCH_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
 const TWITCH_SECRET = process.env.TWITCH_SECRET;
 const SESSION_SECRET = process.env.SESSION_SECRET;
 const CALLBACK_URL = 'http://localhost:3000/auth/twitch/callback'; // You can run locally with - http://localhost:3000/auth/twitch/callback
+
+let test = 'false';
 
 // Initialize Express and middleware
 const app = express();
@@ -92,7 +97,7 @@ passport.use(
 // Set route to start OAuth link, this is where you define scopes to request
 app.get(
   '/auth/twitch',
-  passport.authenticate('twitch', { scope: 'user_read' })
+  passport.authenticate('twitch', { scope: 'user_read chat:read chat:edit' })
 );
 
 // Set route for OAuth redirect
@@ -113,15 +118,27 @@ const template = handlebars.compile(`
     <tr><th>Display Name</th><td>{{display_name}}</td></tr>
     <tr><th>Description</th><td>{{description}}</td></tr>
     <tr><th>Profile Image</th><td><img src="{{profile_image_url}}" width="36" /></td></tr>
+    <tr><th>Chat Message Sent</th><td>{{chatSent}}</td></tr>
 </table></html>`);
 
 // If user has an authenticated session, display it, otherwise display link to authenticate
 app.get('/', function(req, res) {
   if (req.session && req.session.passport && req.session.passport.user) {
-    res.send(template(req.session.passport.user));
+    req.session.passport.user.chatSent = 'false';
+    const token = req.session.passport.user.accessToken;
+    const username = req.session.passport.user.display_name;
+    const { chat, chatConstants } = new TwitchJS({ token, username });
+    chatThings(chat, req.session.passport.user).then(() => {
+      // console.log('test in app.get: ', test);
+      // if (test === 'true') {
+      //   console.log('setting user.chatSent to true');
+      //   req.session.passport.user.chatSent = 'true';
+      // }
+      res.send(template(req.session.passport.user));
+    });
   } else {
     res.send(
-      '<html><head><title>Twitch Auth Sample</title></head><a href="/auth/twitch"><img src="http://ttv-api.s3.amazonaws.com/assets/connect_dark.png"></a></html>'
+      '<html><head><title>Twitch Auth Sample</title></head><a href="/auth/twitch">Connect with Twitch</html>'
     );
   }
 });
@@ -129,3 +146,11 @@ app.get('/', function(req, res) {
 app.listen(3000, function() {
   console.log('Twitch auth sample listening on port 3000!');
 });
+
+const chatThings = async (chat, user) => {
+  await chat.connect();
+  chat.join(user.display_name);
+  await chat.say(user.display_name, 'Example chat message');
+  //test = 'true';
+  user.chatSent = 'true';
+};
