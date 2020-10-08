@@ -8,7 +8,7 @@
     "express": "^4.15.2",
     "express-session": "^1.17.1",
     "handlebars": "^4.7.6",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "passport": "^0.4.1",
     "passport-oauth": "^1.0.0",
     "request": "^2.88.2",
