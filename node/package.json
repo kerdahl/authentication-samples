@@ -4,7 +4,7 @@
   "description": "Twitch API Authentication Example using Node, Express, and Passport.",
   "main": "index.js",
   "dependencies": {
-    "dotenv": "^8.2.0",
+    "dotenv": "^9.0.2",
     "express": "^4.15.2",
     "express-session": "^1.17.1",
     "handlebars": "^4.7.6",
