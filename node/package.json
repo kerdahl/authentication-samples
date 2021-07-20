@@ -15,7 +15,7 @@
     "twitch-js": "^2.0.0-beta.33"
   },
   "devDependencies": {
-    "eslint": "^7.10.0"
+    "eslint": "^7.31.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
